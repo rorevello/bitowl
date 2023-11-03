@@ -47,7 +47,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
         #                           #
         #############################
 
-        uri_implementation = uri_enbic2lab + "Implementation" + name.capitalize()
+        uri_implementation = uri_enbic2lab + "Implementation" + name.capitalize().replace(" ", "_")
         type_implementation = uri_bigowl + "Implementation"
 
         # dependecy
@@ -239,7 +239,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
             "DataSink": "DataSinkAlgorithm",
         }
 
-        uri_algorithm = uri_enbic2lab + "Algorithm" + name.capitalize()
+        uri_algorithm = uri_enbic2lab + "Algorithm" + name.capitalize().replace(" ", "_")
 
         try:
             type_algorithm = uri_bigowl + dict_type_algorithm[str(annotation["type"])]
@@ -298,7 +298,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
         #                           #
         #############################
 
-        uri_component = uri_enbic2lab + "Component" + name.capitalize()
+        uri_component = uri_enbic2lab + "Component" + (name.capitalize()).replace(" ", "_")
 
         type_component = uri_bigowl + str(annotation["type"])
 
