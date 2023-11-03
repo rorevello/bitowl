@@ -34,8 +34,8 @@ def graph_rdf(path: str, graph, schema) -> Graph:
         with open("log_annotation.txt", "a") as file:
             file.write(result + "\n")
 
-        uri_enbic2lab = "http://wwww.ontologies.khaos.uma.es/enbic2lab/"
-        uri_bigowl = "http://wwww.ontologies.khaos.uma.es/bigowl/"
+        uri_enbic2lab = "http://www.ontologies.khaos.uma.es/enbic2lab/"
+        uri_bigowl = "http://www.ontologies.khaos.uma.es/bigowl/"
 
         name = str(annotation["name"])
 
