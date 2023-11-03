@@ -22,11 +22,10 @@ This script depends on the following Python libraries:
 - rdflib
 - os
 - uuid
-- tqdm
 
 Make sure to have these libraries installed before running the script. You can install them using pip:
 
 ```bash
-pip install jsonschema rdflib uuid tqdm
+pip install jsonschema rdflib uuid 
 ```
 
