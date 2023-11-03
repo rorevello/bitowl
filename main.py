@@ -265,7 +265,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 + "/log_annotation.txt "
                 + "for more errors"
             )
-            print("\n")
+            
 
             error_in_modelage += 1
 
@@ -424,7 +424,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                     + "/log_annotation.txt "
                     + "for more errors"
                 )
-                print("\n")
+                
                 error_in_modelage += 1
 
             g.add(
@@ -567,7 +567,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
         print(
             "Please check " + os.getcwd() + "/log_annotation.txt " + "for more errors"
         )
-        print("\n")
+        
 
         g = graph
 
