@@ -30,6 +30,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
             result = path + " follows the schema."
         except jsonschema.exceptions.ValidationError as e:
             result = path + f" --> ERROR does not follow the schema : {e}"
+            error_in_modelage += 1
 
         with open("log_annotation.txt", "a") as file:
             file.write(result + "\n")
