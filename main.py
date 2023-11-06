@@ -535,6 +535,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                         rdflib.URIRef(uri_input),
                     )
                 )
+                g.add((rdflib.URIRef(uri_bigowl + "specifiesInputClass"), RDF.type, OWL.ObjectProperty))
 
         for output in annotation["outputs"]:
             output_uuid = uuid.uuid1()
@@ -575,6 +576,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                         rdflib.URIRef(uri_output),
                     )
                 )
+                g.add((rdflib.URIRef(uri_bigowl + "specifiesOutputClass"), RDF.type, OWL.ObjectProperty))
 
         if error_in_modelage != 1:
             g = graph
