@@ -3,7 +3,7 @@ import jsonschema
 import rdflib
 import os
 import uuid
-from rdflib import Graph, Literal, RDFS, RDF, URIRef
+from rdflib import Graph, Literal, RDFS, RDF, URIRef,OWL
 from jsonschema import validate
 
 
@@ -61,13 +61,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 + "_"
                 + str(dependecie["license"])
             )
-            g.add(
-                (
-                    rdflib.URIRef(uri_implementation),
-                    rdflib.URIRef(uri_bigowl + "hasDependency"),
-                    rdflib.Literal(uri_dependecy),
-                )
-            )
+            g.add((rdflib.URIRef(uri_dependecy), RDF.type,  rdflib.URIRef(uri_bigowl + "Dependency")))
             g.add(
                 (
                     rdflib.URIRef(uri_dependecy),
@@ -88,6 +82,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                     rdflib.Literal(dependecie["version"]),
                 )
             )
+            g.add((rdflib.URIRef(uri_bigowl + "hasVersion"), RDF.type, OWL.DatatypeProperty))
             g.add(
                 (
                     rdflib.URIRef(uri_dependecy),
@@ -95,6 +90,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                     rdflib.Literal(dependecie["license"]),
                 )
             )
+            g.add((rdflib.URIRef(uri_bigowl + "hasLicense"), RDF.type, OWL.DatatypeProperty))
             g.add(
                 (
                     rdflib.URIRef(uri_dependecy),
@@ -102,6 +98,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                     rdflib.Literal(dependecie["url"]),
                 )
             )
+            g.add((rdflib.URIRef(uri_bigowl + "hasUrl"), RDF.type, OWL.DatatypeProperty))
             g.add(
                 (
                     rdflib.URIRef(uri_dependecy),
@@ -109,8 +106,15 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                     rdflib.Literal(dependecie["name"]),
                 )
             )
-
-        # data implementation
+            g.add((rdflib.URIRef(uri_bigowl + "hasLength"), RDF.type, OWL.DatatypeProperty))
+            g.add(
+                (
+                    rdflib.URIRef(uri_implementation),
+                    rdflib.URIRef(uri_bigowl + "hasDependency"),
+                    rdflib.URIRef(uri_dependecy),
+                )
+            )
+            g.add((rdflib.URIRef(uri_bigowl + "hasDependency"), RDF.type, OWL.ObjectProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -139,6 +143,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["dockerImage"]),
             )
         )
+        g.add((rdflib.URIRef(uri_bigowl + "hasDockerImage"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -146,6 +151,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["license"]),
             )
         )
+        g.add((rdflib.URIRef(uri_bigowl + "hasLicense"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -153,13 +159,15 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["version"]),
             )
         )
+        g.add((rdflib.URIRef(uri_bigowl + "hasVersion"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
                 rdflib.URIRef(uri_bigowl + "hasPublicationDate"),
                 rdflib.Literal(annotation["publicationDate"]),
             )
-        )  # TODO: annotation ??
+        ) 
+        g.add((rdflib.URIRef(uri_bigowl + "hasPublicationDate"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -167,6 +175,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["author"]),
             )
         )
+        g.add((rdflib.URIRef(uri_bigowl + "Author"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -174,6 +183,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["resources"]["cores"]),
             )
         )
+        g.add((rdflib.URIRef(uri_bigowl + "hasCore"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -181,6 +191,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["resources"]["memory"]),
             )
         )
+        g.add((rdflib.URIRef(uri_bigowl + "hasMemory"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -188,6 +199,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["resources"]["gpuMemory"]),
             )
         )
+        g.add((rdflib.URIRef(uri_bigowl + "hasGPUMemory"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -195,6 +207,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["resources"]["gpuNeeded"]),
             )
         )
+        g.add((rdflib.URIRef(uri_bigowl + "hasGPUNeed"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -202,6 +215,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["resources"]["estimatedTimeInMin"]),
             )
         )
+        g.add((rdflib.URIRef(uri_bigowl + "hasEstimatedTimeInMin"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -209,6 +223,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["mainScriptPath"]),
             )
         )
+        g.add((rdflib.URIRef(uri_bigowl + "hasMainScriptPath"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -216,6 +231,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["testPath"]),
             )
         )
+        g.add((rdflib.URIRef(uri_bigowl + "hasTestPath"), RDF.type, OWL.DatatypeProperty))
 
         #############################
         #                           #
@@ -303,7 +319,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
 
         type_component = uri_bigowl + str(annotation["type"])
 
-        # g.add((rdflib.URIRef(uri_component), Namespace.name, rdflib.Literal(str(annotation['name']))))
         g.add(
             (
                 rdflib.URIRef(uri_component),
@@ -334,6 +349,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.URIRef(uri_implementation),
             )
         )
+        g.add((rdflib.URIRef(uri_bigowl + "hasImplementation"), RDF.type, OWL.ObjectProperty))
         g.add(
             (
                 rdflib.URIRef(uri_component),
@@ -341,7 +357,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.URIRef(uri_algorithm),
             )
         )
-
+        g.add((rdflib.URIRef(uri_bigowl + "hasAlgorithm"), RDF.type, OWL.ObjectProperty))
         g.add(
             (
                 rdflib.URIRef(uri_component),
@@ -349,6 +365,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(len(annotation["inputs"])),
             )
         )
+        g.add((rdflib.URIRef(uri_bigowl + "hasNumberOfInputs"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_component),
@@ -356,6 +373,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(len(annotation["outputs"])),
             )
         )
+        g.add((rdflib.URIRef(uri_bigowl + "hasNumberOfOutputs"), RDF.type, OWL.DatatypeProperty))
 
         for parameter in annotation["parameters"]:
             parameter_uuid = uuid.uuid1()
@@ -404,6 +422,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                         rdflib.URIRef(uri_bigowl + str(parameter["type"]).capitalize()),
                     )
                 )
+                g.add((rdflib.URIRef(uri_bigowl + "hasDataType"), RDF.type, OWL.ObjectProperty))
             else:
                 print(
                     '--> ERROR: type parameter not found in list_parametre_type: "string", "number", "integer", "float", "boolean" '
@@ -453,6 +472,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                             rdflib.Literal(str(parameter["defaultValue"])),
                         )
                     )
+            g.add((rdflib.URIRef(uri_bigowl + "hasDefaultValue"), RDF.type, OWL.DatatypeProperty))
 
         list_data_type = {
             "bin": "Bin",
