@@ -384,6 +384,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 + "_"
                 + str(parameter_uuid)
             )
+            g.add((rdflib.URIRef(uri_component), rdflib.URIRef(uri_bigowl + "hasParameter"), rdflib.URIRef(uri_parameter)))
 
             g.add(
                 (
