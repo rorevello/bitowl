@@ -3,7 +3,7 @@ import jsonschema
 import rdflib
 import os
 import uuid
-from rdflib import Graph, Literal, RDFS, RDF, URIRef,OWL
+from rdflib import Graph, Literal, RDFS, RDF, URIRef
 from jsonschema import validate
 
 
@@ -61,7 +61,13 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 + "_"
                 + str(dependecie["license"])
             )
-            g.add((rdflib.URIRef(uri_dependecy), RDF.type,  rdflib.URIRef(uri_bigowl + "Dependency")))
+            g.add(
+                (
+                    rdflib.URIRef(uri_implementation),
+                    rdflib.URIRef(uri_bigowl + "hasDependency"),
+                    rdflib.URIRef(uri_dependecy),
+                )
+            )
             g.add(
                 (
                     rdflib.URIRef(uri_dependecy),
@@ -82,7 +88,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                     rdflib.Literal(dependecie["version"]),
                 )
             )
-            g.add((rdflib.URIRef(uri_bigowl + "hasVersion"), RDF.type, OWL.DatatypeProperty))
             g.add(
                 (
                     rdflib.URIRef(uri_dependecy),
@@ -90,7 +95,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                     rdflib.Literal(dependecie["license"]),
                 )
             )
-            g.add((rdflib.URIRef(uri_bigowl + "hasLicense"), RDF.type, OWL.DatatypeProperty))
             g.add(
                 (
                     rdflib.URIRef(uri_dependecy),
@@ -98,7 +102,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                     rdflib.Literal(dependecie["url"]),
                 )
             )
-            g.add((rdflib.URIRef(uri_bigowl + "hasUrl"), RDF.type, OWL.DatatypeProperty))
             g.add(
                 (
                     rdflib.URIRef(uri_dependecy),
@@ -106,15 +109,8 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                     rdflib.Literal(dependecie["name"]),
                 )
             )
-            g.add((rdflib.URIRef(uri_bigowl + "hasLength"), RDF.type, OWL.DatatypeProperty))
-            g.add(
-                (
-                    rdflib.URIRef(uri_implementation),
-                    rdflib.URIRef(uri_bigowl + "hasDependency"),
-                    rdflib.URIRef(uri_dependecy),
-                )
-            )
-            g.add((rdflib.URIRef(uri_bigowl + "hasDependency"), RDF.type, OWL.ObjectProperty))
+
+        # data implementation
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -136,6 +132,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.URIRef(type_implementation),
             )
         )
+        
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -143,7 +140,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["dockerImage"]),
             )
         )
-        g.add((rdflib.URIRef(uri_bigowl + "hasDockerImage"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -151,7 +147,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["license"]),
             )
         )
-        g.add((rdflib.URIRef(uri_bigowl + "hasLicense"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -159,15 +154,13 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["version"]),
             )
         )
-        g.add((rdflib.URIRef(uri_bigowl + "hasVersion"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
                 rdflib.URIRef(uri_bigowl + "hasPublicationDate"),
                 rdflib.Literal(annotation["publicationDate"]),
             )
-        ) 
-        g.add((rdflib.URIRef(uri_bigowl + "hasPublicationDate"), RDF.type, OWL.DatatypeProperty))
+        )  # TODO: annotation ??
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -175,7 +168,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["author"]),
             )
         )
-        g.add((rdflib.URIRef(uri_bigowl + "Author"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -183,7 +175,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["resources"]["cores"]),
             )
         )
-        g.add((rdflib.URIRef(uri_bigowl + "hasCore"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -191,7 +182,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["resources"]["memory"]),
             )
         )
-        g.add((rdflib.URIRef(uri_bigowl + "hasMemory"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -199,7 +189,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["resources"]["gpuMemory"]),
             )
         )
-        g.add((rdflib.URIRef(uri_bigowl + "hasGPUMemory"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -207,7 +196,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["resources"]["gpuNeeded"]),
             )
         )
-        g.add((rdflib.URIRef(uri_bigowl + "hasGPUNeed"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -215,7 +203,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["resources"]["estimatedTimeInMin"]),
             )
         )
-        g.add((rdflib.URIRef(uri_bigowl + "hasEstimatedTimeInMin"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -223,7 +210,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["mainScriptPath"]),
             )
         )
-        g.add((rdflib.URIRef(uri_bigowl + "hasMainScriptPath"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -231,7 +217,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(annotation["testPath"]),
             )
         )
-        g.add((rdflib.URIRef(uri_bigowl + "hasTestPath"), RDF.type, OWL.DatatypeProperty))
 
         #############################
         #                           #
@@ -281,7 +266,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 + "/log_annotation.txt "
                 + "for more errors"
             )
-            
+            print("\n")
 
             error_in_modelage += 1
 
@@ -319,6 +304,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
 
         type_component = uri_bigowl + str(annotation["type"])
 
+        # g.add((rdflib.URIRef(uri_component), Namespace.name, rdflib.Literal(str(annotation['name']))))
         g.add(
             (
                 rdflib.URIRef(uri_component),
@@ -349,7 +335,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.URIRef(uri_implementation),
             )
         )
-        g.add((rdflib.URIRef(uri_bigowl + "hasImplementation"), RDF.type, OWL.ObjectProperty))
         g.add(
             (
                 rdflib.URIRef(uri_component),
@@ -357,7 +342,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.URIRef(uri_algorithm),
             )
         )
-        g.add((rdflib.URIRef(uri_bigowl + "hasAlgorithm"), RDF.type, OWL.ObjectProperty))
+
         g.add(
             (
                 rdflib.URIRef(uri_component),
@@ -365,7 +350,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(len(annotation["inputs"])),
             )
         )
-        g.add((rdflib.URIRef(uri_bigowl + "hasNumberOfInputs"), RDF.type, OWL.DatatypeProperty))
         g.add(
             (
                 rdflib.URIRef(uri_component),
@@ -373,7 +357,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.Literal(len(annotation["outputs"])),
             )
         )
-        g.add((rdflib.URIRef(uri_bigowl + "hasNumberOfOutputs"), RDF.type, OWL.DatatypeProperty))
 
         for parameter in annotation["parameters"]:
             parameter_uuid = uuid.uuid1()
@@ -384,7 +367,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 + "_"
                 + str(parameter_uuid)
             )
-            g.add((rdflib.URIRef(uri_component), rdflib.URIRef(uri_bigowl + "hasParameter"), rdflib.URIRef(uri_parameter)))
 
             g.add(
                 (
@@ -423,7 +405,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                         rdflib.URIRef(uri_bigowl + str(parameter["type"]).capitalize()),
                     )
                 )
-                g.add((rdflib.URIRef(uri_bigowl + "hasDataType"), RDF.type, OWL.ObjectProperty))
             else:
                 print(
                     '--> ERROR: type parameter not found in list_parametre_type: "string", "number", "integer", "float", "boolean" '
@@ -444,7 +425,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                     + "/log_annotation.txt "
                     + "for more errors"
                 )
-                
+                print("\n")
                 error_in_modelage += 1
 
             g.add(
@@ -473,7 +454,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                             rdflib.Literal(str(parameter["defaultValue"])),
                         )
                     )
-            g.add((rdflib.URIRef(uri_bigowl + "hasDefaultValue"), RDF.type, OWL.DatatypeProperty))
 
         list_data_type = {
             "bin": "Bin",
@@ -488,7 +468,8 @@ def graph_rdf(path: str, graph, schema) -> Graph:
             "text": "Text",
             "datasetclass": "Datasetclass",
             "tabulardataset": "Tabulardataset",
-            "doc": "Doc",
+            "docx": "Docx",
+            "xlsx": "Xlsx",
             "html": "HTML",
             "json": "Json",
             "rdf": "RDF",
@@ -496,6 +477,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
             "tiff": "Tiff",
             "zip": "Zip",
         }
+        #TODO:CREAR las clases Docx yXlsx en bigOwl
 
         for input in annotation["inputs"]:
             input_uuid = uuid.uuid1()
@@ -536,7 +518,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                         rdflib.URIRef(uri_input),
                     )
                 )
-                g.add((rdflib.URIRef(uri_bigowl + "specifiesInputClass"), RDF.type, OWL.ObjectProperty))
 
         for output in annotation["outputs"]:
             output_uuid = uuid.uuid1()
@@ -577,7 +558,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                         rdflib.URIRef(uri_output),
                     )
                 )
-                g.add((rdflib.URIRef(uri_bigowl + "specifiesOutputClass"), RDF.type, OWL.ObjectProperty))
 
         if error_in_modelage != 1:
             g = graph
@@ -590,7 +570,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
         print(
             "Please check " + os.getcwd() + "/log_annotation.txt " + "for more errors"
         )
-        
+        print("\n")
 
         g = graph
 
@@ -636,304 +616,8 @@ if __name__ == "__main__":
         ]
     )
     print(HEADER)
-
-    schema = {
-        "$schema": "http://json-schema.org/draft-07/schema#",
-        "type": "object",
-        "properties": {
-            "type": {
-                "type": "string",
-                "description": "Specifies the category of the component within the data workflow.",
-                "enum": [
-                    "DataProcessing",
-                    "DataAnalysing",
-                    "DataSink",
-                    "DataCollection",
-                    "DataFlow",
-                ],
-            },
-            "name": {"type": "string", "description": "Name of the component."},
-            "label": {
-                "type": "string",
-                "description": "A concise, descriptive name for the component that will be displayed in user interfaces.",
-            },
-            "description": {
-                "type": "string",
-                "description": "A detailed description of the component's purpose and functionality.",
-            },
-            "license": {
-                "type": "string",
-                "description": "Software license governing the component's use and distribution.",
-            },
-            "version": {
-                "type": "string",
-                "description": "The release version of the component, following semantic versioning when applicable.",
-                "default": "0.0.1",
-            },
-            "dockerImage": {
-                "type": "string",
-                "description": "The full identifier for the Docker image used to execute the component, including the repository and tag.",
-                "default": "docker.io/docker/hello-world:latest",
-            },
-            "tags": {
-                "type": "array",
-                "items": {"type": "string"},
-                "description": "An array of keywords to facilitate search and categorization of the component.",
-                "uniqueItems": True,
-            },
-            "parameters": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "name": {
-                            "type": "string",
-                            "description": "The technical name used internally by the component to identify the parameter.",
-                        },
-                        "label": {
-                            "type": "string",
-                            "description": "A readable name for the parameter used in user interfaces.",
-                        },
-                        "description": {
-                            "type": "string",
-                            "description": "Explains what the parameter does and how it affects the component's behavior.",
-                        },
-                        "type": {
-                            "type": "string",
-                            "description": "Specifies the expected data type for the parameter value.",
-                            "enum": ["string", "number", "integer", "float", "boolean"],
-                        },
-                        "required": {
-                            "type": "boolean",
-                            "description": "Whether the parameter must be provided for the component to function.",
-                        },
-                        "defaultValue": {
-                            "type": "string",
-                            "description": "Provides a default value for the parameter, to be used when no value is explicitly provided.",
-                            "properties": {},
-                        },
-                    },
-                    "required": ["name", "label", "description", "type", "required"],
-                    "description": "Parameters that can be configured for the component.",
-                },
-                "uniqueItems": True,
-            },
-            "inputs": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "name": {
-                            "type": "string",
-                            "description": "The name identifying each input required by the component.",
-                        },
-                        "label": {
-                            "type": "string",
-                            "description": "A label providing a human-readable name for the input.",
-                        },
-                        "path": {
-                            "type": "string",
-                            "description": "The location or source path where the input data can be found.",
-                        },
-                        "type": {
-                            "type": "string",
-                            "description": "The data type of the input.",
-                            "enum": [
-                                "bin",
-                                "fastq",
-                                "image",
-                                "map",
-                                "pdf",
-                                "rar",
-                                "sav",
-                                "shp",
-                                "tempfile",
-                                "text",
-                                "datasetclass",
-                                "tabulardataset",
-                                "doc",
-                                "html",
-                                "json",
-                                "rdf",
-                                "xml",
-                                "tiff",
-                                "zip",
-                            ],
-                        },
-                    },
-                    "required": ["name", "label", "path", "type"],
-                    "description": "Input data sources for the component.",
-                },
-            },
-            "outputs": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "name": {
-                            "type": "string",
-                            "description": "The name identifying each output generated by the component.",
-                        },
-                        "label": {
-                            "type": "string",
-                            "description": "A label providing a human-readable name for the output.",
-                        },
-                        "path": {
-                            "type": "string",
-                            "description": "The destination path where output data will be written.",
-                        },
-                        "type": {
-                            "type": "string",
-                            "description": "The data type of the output.",
-                            "enum": [
-                                "bin",
-                                "fastq",
-                                "image",
-                                "map",
-                                "pdf",
-                                "rar",
-                                "sav",
-                                "shp",
-                                "tempfile",
-                                "text",
-                                "datasetclass",
-                                "tabulardataset",
-                                "doc",
-                                "html",
-                                "json",
-                                "rdf",
-                                "xml",
-                                "tiff",
-                                "zip",
-                            ],
-                        },
-                    },
-                    "required": ["name", "label", "path", "type"],
-                    "description": "Output data destinations for the component.",
-                },
-            },
-            "mainScriptPath": {
-                "type": "string",
-                "description": "The filesystem path to the executable script.",
-            },
-            "testPath": {
-                "type": "string",
-                "description": "The filesystem path to the component's test script or suite.",
-            },
-            "dependencies": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "name": {
-                            "type": "string",
-                            "description": "The name of an external library or service that this component relies on-",
-                        },
-                        "version": {
-                            "type": "string",
-                            "description": "The specified version of the dependency that is known to be compatible with this component.",
-                        },
-                        "license": {
-                            "type": "string",
-                            "description": "The license governing the dependency, which may impact the overall licensing of the component.",
-                        },
-                        "url": {
-                            "type": "string",
-                            "description": "A URL or other locator where the dependency can be accessed or reviewed.",
-                        },
-                    },
-                    "required": ["name", "version", "license"],
-                    "description": "Dependencies required to run the component.",
-                },
-            },
-            "resources": {
-                "type": "object",
-                "properties": {
-                    "cores": {
-                        "type": "integer",
-                        "description": "The number of CPU cores requested for processing.",
-                    },
-                    "memory": {
-                        "type": "integer",
-                        "description": "The quantity of RAM required for the component, specified in Megabytes (MB).",
-                    },
-                    "gpuNeeded": {
-                        "type": "boolean",
-                        "description": "Flag to indicate whether the component requires GPU support.",
-                        "default": False,
-                    },
-                    "gpuMemory": {
-                        "type": ["integer", "null"],
-                        "description": "The amount of GPU memory required, specified in Megabytes (MB), applicable if `gpuNeeded` is true.",
-                    },
-                    "estimatedTimeInMin": {
-                        "type": "integer",
-                        "description": "An approximate time in minutes that the component will take to execute.",
-                    },
-                },
-                "required": [
-                    "cores",
-                    "memory",
-                    "gpuNeeded",
-                    "gpuMemory",
-                    "estimatedTimeInMin",
-                ],
-                "description": "Resource requirements for running the component.",
-            },
-            "publicationDate": {
-                "type": "string",
-                "format": "date-time",
-                "description": "The date and time when the component was officially made available.",
-            },
-            "author": {
-                "type": "object",
-                "properties": {
-                    "email": {"type": "string", "description": "Author email."},
-                    "affiliation": {
-                        "type": "string",
-                        "description": "The institution or organization with which the author is associated.",
-                    },
-                },
-                "required": ["email", "affiliation"],
-                "description": "Identifies the individual or organization responsible for creating the component.",
-            },
-            "contributor": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "email": {
-                            "type": "string",
-                            "format": "email",
-                            "default": "Contact email.",
-                            "description": "Contributor email.",
-                        },
-                        "affiliation": {
-                            "type": "string",
-                            "description": "The institution or organization with which the contributor is associated.",
-                        },
-                    },
-                    "required": ["email"],
-                },
-                "description": "Contact information for the component's author or maintainers.",
-            },
-        },
-        "required": [
-            "type",
-            "name",
-            "label",
-            "description",
-            "license",
-            "version",
-            "dockerImage",
-            "outputs",
-            "mainScriptPath",
-            "dependencies",
-            "resources",
-            "publicationDate",
-            "author",
-            "contributor",
-        ],
-    }
+    #abrir json schema externo
+    with open("schema.json", "r") as f:
+        schema = json.load(f)
 
     main(schema)
