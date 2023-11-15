@@ -40,7 +40,10 @@ def graph_rdf(path: str, graph, schema) -> Graph:
 
         name = str(annotation["name"])
 
+        
         g = graph
+        g.parse('.../ontology/bigowl.owl',format='xml')
+
 
         #############################
         #                           #
@@ -342,6 +345,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.URIRef(uri_algorithm),
             )
         )
+        g.add((rdflib.URIRef(uri_component),rdflib.URIRef(uri_bigowl + "hasTag"),rdflib.Literal(annotation["tags"])))
 
         g.add(
             (
@@ -375,6 +379,10 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                     rdflib.Literal(str(parameter["label"])),
                 )
             )
+            g.add((
+
+                rdflib.URIRef(uri_component),rdflib.URIRef(uri_bigowl + "hasParameter"),rdflib.URIRef(uri_parameter)
+            ))
             g.add(
                 (
                     rdflib.URIRef(uri_parameter),
@@ -436,7 +444,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 )
             )
             if "defaultValue" in parameter:
-                if ".inputs." in (parameter["defaultValue"]):
+                """if ".inputs." in (parameter["defaultValue"]):
                     for input in annotation["inputs"]:
                         if input["name"] == parameter["defaultValue"].split(".")[2]:
                             g.add(
@@ -446,8 +454,8 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                                     rdflib.Literal(str(input["path"])),
                                 )
                             )
-                else:
-                    g.add(
+                else:"""
+                g.add(
                         (
                             rdflib.URIRef(uri_parameter),
                             rdflib.URIRef(uri_bigowl + "hasDefaultValue"),
@@ -505,6 +513,13 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 g.add(
                     (
                         rdflib.URIRef(uri_input),
+                        rdflib.URIRef(uri_bigowl + "hasPath"),
+                        rdflib.Literal(str(input["path"])),
+                    )
+                )
+                g.add(
+                    (
+                        rdflib.URIRef(uri_input),
                         RDF.type,
                         rdflib.URIRef(
                             uri_enbic2lab + (list_data_type[input["type"].lower()])
@@ -556,6 +571,13 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                         rdflib.URIRef(uri_component),
                         rdflib.URIRef(uri_bigowl + "specifiesOutputClass"),
                         rdflib.URIRef(uri_output),
+                    )
+                )
+                g.add(
+                    (
+                        rdflib.URIRef(uri_output),
+                        rdflib.URIRef(uri_bigowl + "hasPath"),
+                        rdflib.Literal(str(output["path"])),
                     )
                 )
 
