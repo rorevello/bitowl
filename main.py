@@ -163,7 +163,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.URIRef(uri_bigowl + "hasPublicationDate"),
                 rdflib.Literal(annotation["publicationDate"]),
             )
-        )  # TODO: annotation ??
+        )  
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -444,17 +444,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 )
             )
             if "defaultValue" in parameter:
-                """if ".inputs." in (parameter["defaultValue"]):
-                    for input in annotation["inputs"]:
-                        if input["name"] == parameter["defaultValue"].split(".")[2]:
-                            g.add(
-                                (
-                                    rdflib.URIRef(uri_parameter),
-                                    rdflib.URIRef(uri_bigowl + "hasDefaultValue"),
-                                    rdflib.Literal(str(input["path"])),
-                                )
-                            )
-                else:"""
                 g.add(
                         (
                             rdflib.URIRef(uri_parameter),
@@ -462,6 +451,14 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                             rdflib.Literal(str(parameter["defaultValue"])),
                         )
                     )
+            if "readOnly" in parameter:
+                g.add(
+                    (
+                        rdflib.URIRef(uri_parameter),
+                        rdflib.URIRef(uri_bigowl + "hasReadOnly"),
+                        rdflib.Literal(str(parameter["readOnly"])),
+                    )
+                )
 
         list_data_type = {
             "bin": "Bin",
@@ -486,7 +483,6 @@ def graph_rdf(path: str, graph, schema) -> Graph:
             "zip": "Zip",
             "pkl": "Pkl",
         }
-        #TODO:CREAR las clases Docx yXlsx en bigOwl
 
         for input in annotation["inputs"]:
             input_uuid = uuid.uuid1()
