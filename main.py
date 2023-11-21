@@ -484,6 +484,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
             "xml": "XML",
             "tiff": "Tiff",
             "zip": "Zip",
+            "pkl": "Pkl",
         }
         #TODO:CREAR las clases Docx yXlsx en bigOwl
 
