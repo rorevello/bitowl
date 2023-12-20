@@ -6,7 +6,7 @@ The RDF graph is then saved to a file ``ontology_enbic2lab.owl``.
 Schema validations as well as errors are stored in a file called ``log_annotation.txt``.
 
 ## Usage
-To use this script, simply place it in the root folder of the repository and run it from your Python terminal. The script will search the different subfolders.
+To use this script, place the 'main.py' file and the 'ontology' folder with 'bigowl' in the repository's root folder. Run to 'main.py' from your terminal; the script will search the different subfolders, and using 'bigowl' will generate the final ontology.
 
 ## Execution
 To run this script, you will need to have Python installed on your machine. Then, you can execute the script with the following command:
