@@ -3,7 +3,7 @@ import jsonschema
 import rdflib
 import os
 import uuid
-from rdflib import Graph, Literal, RDFS, RDF, URIRef
+from rdflib import Graph, RDFS, RDF
 from jsonschema import validate
 
 
@@ -40,10 +40,8 @@ def graph_rdf(path: str, graph, schema) -> Graph:
 
         name = str(annotation["name"])
 
-        
         g = graph
-        g.parse('.../ontology/bigowl.owl',format='xml')
-
+        g.parse("ontology/bigowl.owl", format="xml")
 
         #############################
         #                           #
@@ -51,7 +49,9 @@ def graph_rdf(path: str, graph, schema) -> Graph:
         #                           #
         #############################
 
-        uri_implementation = uri_enbic2lab + "Implementation" + name.capitalize().replace(" ", "_")
+        uri_implementation = (
+            uri_enbic2lab + "Implementation" + name.capitalize().replace(" ", "_")
+        )
         type_implementation = uri_bigowl + "Implementation"
 
         # dependecy
@@ -135,7 +135,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.URIRef(type_implementation),
             )
         )
-        
+
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -163,7 +163,7 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.URIRef(uri_bigowl + "hasPublicationDate"),
                 rdflib.Literal(annotation["publicationDate"]),
             )
-        )  
+        )
         g.add(
             (
                 rdflib.URIRef(uri_implementation),
@@ -244,12 +244,14 @@ def graph_rdf(path: str, graph, schema) -> Graph:
             "DataSink": "DataSinkAlgorithm",
         }
 
-        uri_algorithm = uri_enbic2lab + "Algorithm" + name.capitalize().replace(" ", "_")
+        uri_algorithm = (
+            uri_enbic2lab + "Algorithm" + name.capitalize().replace(" ", "_")
+        )
 
         try:
             type_algorithm = uri_bigowl + dict_type_algorithm[str(annotation["type"])]
 
-        except:
+        except: 
             print(
                 '--> ERROR: type algorithm not found in dict_type_algorithm: "DataAnalysing", "MachineLearning", "DataMinig", "DataCollection", "DataIngestion", "DataFlow", "DataProcessing", "DataTransform", "RemoveOutlier", "Split", "SplitShuffle", "WebSever", "DataSink"'
             )
@@ -303,11 +305,12 @@ def graph_rdf(path: str, graph, schema) -> Graph:
         #                           #
         #############################
 
-        uri_component = uri_enbic2lab + "Component" + (name.capitalize()).replace(" ", "_")
+        uri_component = (
+            uri_enbic2lab + "Component" + (name.capitalize()).replace(" ", "_")
+        )
 
         type_component = uri_bigowl + str(annotation["type"])
 
-        # g.add((rdflib.URIRef(uri_component), Namespace.name, rdflib.Literal(str(annotation['name']))))
         g.add(
             (
                 rdflib.URIRef(uri_component),
@@ -345,15 +348,21 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                 rdflib.URIRef(uri_algorithm),
             )
         )
-        g.add((rdflib.URIRef(uri_component),rdflib.URIRef(uri_bigowl + "hasTag"),rdflib.Literal(annotation["tags"])))
-
         g.add(
             (
                 rdflib.URIRef(uri_component),
-                rdflib.URIRef(uri_bigowl + "hasNumberOfInputs"),
-                rdflib.Literal(len(annotation["inputs"])),
+                rdflib.URIRef(uri_bigowl + "hasTag"),
+                rdflib.Literal(annotation["tags"]),
             )
         )
+        if "inputs" in annotation:
+            g.add(
+                (
+                    rdflib.URIRef(uri_component),
+                    rdflib.URIRef(uri_bigowl + "hasNumberOfInputs"),
+                    rdflib.Literal(len(annotation["inputs"])),
+                )
+            )
         g.add(
             (
                 rdflib.URIRef(uri_component),
@@ -379,10 +388,13 @@ def graph_rdf(path: str, graph, schema) -> Graph:
                     rdflib.Literal(str(parameter["label"])),
                 )
             )
-            g.add((
-
-                rdflib.URIRef(uri_component),rdflib.URIRef(uri_bigowl + "hasParameter"),rdflib.URIRef(uri_parameter)
-            ))
+            g.add(
+                (
+                    rdflib.URIRef(uri_component),
+                    rdflib.URIRef(uri_bigowl + "hasParameter"),
+                    rdflib.URIRef(uri_parameter),
+                )
+            )
             g.add(
                 (
                     rdflib.URIRef(uri_parameter),
@@ -445,12 +457,12 @@ def graph_rdf(path: str, graph, schema) -> Graph:
             )
             if "defaultValue" in parameter:
                 g.add(
-                        (
-                            rdflib.URIRef(uri_parameter),
-                            rdflib.URIRef(uri_bigowl + "hasDefaultValue"),
-                            rdflib.Literal(str(parameter["defaultValue"])),
-                        )
+                    (
+                        rdflib.URIRef(uri_parameter),
+                        rdflib.URIRef(uri_bigowl + "hasDefaultValue"),
+                        rdflib.Literal(str(parameter["defaultValue"])),
                     )
+                )
             if "readOnly" in parameter:
                 g.add(
                     (
@@ -482,54 +494,55 @@ def graph_rdf(path: str, graph, schema) -> Graph:
             "tiff": "Tiff",
             "zip": "Zip",
             "pkl": "Pkl",
+            "onnx": "Bin",
         }
-
-        for input in annotation["inputs"]:
-            input_uuid = uuid.uuid1()
-            uri_input = (
-                uri_enbic2lab
-                + (str(input["label"])).replace(" ", "_")
-                + "_"
-                + str(input_uuid)
-            )
-            if input["type"] in list_data_type:
-                g.add(
-                    (
-                        rdflib.URIRef(uri_input),
-                        RDFS.label,
-                        rdflib.Literal(str(input["label"])),
-                    )
+        if "inputs" in annotation:
+            for input in annotation["inputs"]:
+                input_uuid = uuid.uuid1()
+                uri_input = (
+                    uri_enbic2lab
+                    + (str(input["label"])).replace(" ", "_")
+                    + "_"
+                    + str(input_uuid)
                 )
-                g.add(
-                    (
-                        rdflib.URIRef(uri_input),
-                        rdflib.URIRef(uri_bigowl + "hasName"),
-                        rdflib.Literal(str(input["name"])),
+                if input["type"] in list_data_type:
+                    g.add(
+                        (
+                            rdflib.URIRef(uri_input),
+                            RDFS.label,
+                            rdflib.Literal(str(input["label"])),
+                        )
                     )
-                )
-                g.add(
-                    (
-                        rdflib.URIRef(uri_input),
-                        rdflib.URIRef(uri_bigowl + "hasPath"),
-                        rdflib.Literal(str(input["path"])),
+                    g.add(
+                        (
+                            rdflib.URIRef(uri_input),
+                            rdflib.URIRef(uri_bigowl + "hasName"),
+                            rdflib.Literal(str(input["name"])),
+                        )
                     )
-                )
-                g.add(
-                    (
-                        rdflib.URIRef(uri_input),
-                        RDF.type,
-                        rdflib.URIRef(
-                            uri_enbic2lab + (list_data_type[input["type"].lower()])
-                        ),
+                    g.add(
+                        (
+                            rdflib.URIRef(uri_input),
+                            rdflib.URIRef(uri_bigowl + "hasPath"),
+                            rdflib.Literal(str(input["path"])),
+                        )
                     )
-                )
-                g.add(
-                    (
-                        rdflib.URIRef(uri_component),
-                        rdflib.URIRef(uri_bigowl + "specifiesInputClass"),
-                        rdflib.URIRef(uri_input),
+                    g.add(
+                        (
+                            rdflib.URIRef(uri_input),
+                            RDF.type,
+                            rdflib.URIRef(
+                                uri_enbic2lab + (list_data_type[input["type"].lower()])
+                            ),
+                        )
                     )
-                )
+                    g.add(
+                        (
+                            rdflib.URIRef(uri_component),
+                            rdflib.URIRef(uri_bigowl + "specifiesInputClass"),
+                            rdflib.URIRef(uri_input),
+                        )
+                    )
 
         for output in annotation["outputs"]:
             output_uuid = uuid.uuid1()
@@ -597,18 +610,22 @@ def graph_rdf(path: str, graph, schema) -> Graph:
 
 
 def main(schema):
-
     g = Graph()
 
     with open("log_annotation.txt", "w") as file:
         file.write("Annotation.json Schema Compliance \n\n")
-
+    p = 0
     for root, dirs, files in os.walk(os.getcwd()):
         for file in files:
-            if "annotation.json" in file:
+            if (
+                "annotation" in file
+                and ".json" in file
+                and "annotation.schema.json" not in file
+            ):
+                p += 1
                 (graph_rdf(os.path.join(root, file), g, schema))
+    print("Number of components: ", p, "\n")
 
-    hash = uuid.uuid1()
     owl_file = open(
         "ontology_enbic2lab.owl",
         "w",
@@ -618,7 +635,6 @@ def main(schema):
 
 
 if __name__ == "__main__":
-
     __version__ = "0.1.0"
     __group__ = "Khaos Research <khaos.uma.es>"
 
@@ -635,8 +651,8 @@ if __name__ == "__main__":
         ]
     )
     print(HEADER)
-    #abrir json schema externo
-    with open("schema.json", "r") as f:
+    # open json schema file
+    with open("annotation.schema.json", "r") as f:
         schema = json.load(f)
 
     main(schema)
